@@ -1,0 +1,80 @@
+[project]
+name = "qinglan-bot"
+version = "0.1.6"
+description = "基于NoneBot2与鹊桥的Minecraft Server消息互通机器人"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "nonebot-adapter-minecraft>=1.5.1",
+    "nonebot-plugin-alconna>=0.59.3",
+    "nonebot-plugin-orm[sqlite]>=0.8.2",
+    "nonebot-plugin-uninfo>=0.9.0",
+    "nonebot2[fastapi,httpx,websockets]>=2.4.2,<3",
+]
+
+[dependency-groups]
+dev = [
+    "nb-cli>=1.4.2",
+    "nonebot-adapter-onebot>=2.4.6",
+    "nonebot-adapter-qq>=1.6.5",
+    "nonebug>=0.4.3",
+    "pre-commit>=4.2.0",
+    "ruff>=0.12.7",
+]
+test = ["pytest>=8.4.1", "pytest-cov>=6.2.1"]
+
+[tool.nonebot]
+adapters = [
+    { name = "Minecraft", module_name = "nonebot.adapters.minecraft" },
+    { name = "QQ", module_name = "nonebot.adapters.qq" },
+    { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" },
+]
+plugins = ["qinglan_bot"]
+plugin_dirs = []
+builtin_plugins = []
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "F",     # Pyflakes
+    "W",     # pycodestyle warnings
+    "E",     # pycodestyle errors
+    "I",     # isort
+    "UP",    # pyupgrade
+    "ASYNC", # flake8-async
+    "C4",    # flake8-comprehensions
+    "T10",   # flake8-debugger
+    "T20",   # flake8-print
+    "PYI",   # flake8-pyi
+    "PT",    # flake8-pytest-style
+    "Q",     # flake8-quotes
+    "RUF",   # Ruff-specific rules
+]
+ignore = [
+    "E402",
+    "E501",   # module-import-not-at-top-of-file
+    "UP037",  # quoted-annotation
+    "RUF001", # ambiguous-unicode-character-string
+    "RUF002", # ambiguous-unicode-character-docstring
+    "RUF003", # ambiguous-unicode-character-comment
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+[tool.ruff.lint.pyupgrade]
+keep-runtime-typing = true
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+extra-standard-library = ["typing_extensions"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false

@@ -1,3 +1,10 @@
+.ruffcache/
+.venv/
+.vscode/
+data/
+migrations/
+.env.prod
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
