@@ -1,0 +1,41 @@
+name: Publish to PyPI and Release
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: write
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python environment
+        uses: ./.github/actions/setup-python
+
+      - name: Get version from pyproject.toml
+        run: |
+          VERSION=$(grep '^version' pyproject.toml | cut -d'"' -f2)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Build sdist and wheels
+        run: uv build --sdist --wheel
+
+      - name: Publish to PyPI
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: uv publish --username __token__ --password ${{ env.PYPI_API_TOKEN }}
+
+      - name: Create Release with generate notes
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: gh release create v${{ env.VERSION }} --generate-notes

@@ -1,1 +1,3 @@
-from .db import DB
+from . import model
+
+__all__ = ["model"]
