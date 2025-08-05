@@ -1,0 +1,27 @@
+name: Publish to PyPI And Release
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: write
+env:
+  GH_TOKEN: ${{ github.token }}
+  PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python environment
+        uses: ./.github/actions/setup-python
+
+      - name: Build sdist and wheels
+        run: uv build --sdist --wheel
